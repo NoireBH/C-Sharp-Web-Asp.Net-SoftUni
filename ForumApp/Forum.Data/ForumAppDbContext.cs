@@ -1,4 +1,5 @@
 ﻿using ForumApp.Data.Configuration;
+using ForumApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,17 @@ namespace ForumApp.Models
 {
 	public class ForumAppDbContext : DbContext
 	{
-		public ForumAppDbContext(DbContextOptions options) : base(options)
+		protected ForumAppDbContext()
 		{
 		}
+
+		public ForumAppDbContext(DbContextOptions<ForumAppDbContext> options) : base(options)
+		{
+		}
+
+		
+
+		public DbSet<Post> Posts { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{

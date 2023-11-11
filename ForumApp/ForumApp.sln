@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumApp", "ForumApp\ForumApp.csproj", "{2753BDC9-1EEA-4C6E-B1C9-EC2F88BA8D78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApp", "ForumApp\ForumApp.csproj", "{2753BDC9-1EEA-4C6E-B1C9-EC2F88BA8D78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumApp.Data.Models", "ForumApp.Models\ForumApp.Data.Models.csproj", "{4CF147D5-6684-45EF-9FFF-D7D030278656}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApp.Data.Models", "ForumApp.Models\ForumApp.Data.Models.csproj", "{4CF147D5-6684-45EF-9FFF-D7D030278656}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumApp.Services", "ForumApp.Services\ForumApp.Services.csproj", "{975BA1F2-F9FA-4D5E-922A-4930916CD3BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApp.Services", "ForumApp.Services\ForumApp.Services.csproj", "{975BA1F2-F9FA-4D5E-922A-4930916CD3BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumApp.Data", "Forum.Data\ForumApp.Data.csproj", "{319935DF-152E-4DA6-90DD-E4049116BEEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApp.Data", "Forum.Data\ForumApp.Data.csproj", "{319935DF-152E-4DA6-90DD-E4049116BEEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forum.ViewModels", "Forum.ViewModels\Forum.ViewModels.csproj", "{43E84223-E259-4756-BE6A-7F09A480B710}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApp.ViewModels", "Forum.ViewModels\ForumApp.ViewModels.csproj", "{43E84223-E259-4756-BE6A-7F09A480B710}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumApp.Common", "ForumApp.Common\ForumApp.Common.csproj", "{1B43AB0C-65C5-449E-93EC-C14D08805243}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{43E84223-E259-4756-BE6A-7F09A480B710}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43E84223-E259-4756-BE6A-7F09A480B710}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43E84223-E259-4756-BE6A-7F09A480B710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B43AB0C-65C5-449E-93EC-C14D08805243}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B43AB0C-65C5-449E-93EC-C14D08805243}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B43AB0C-65C5-449E-93EC-C14D08805243}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B43AB0C-65C5-449E-93EC-C14D08805243}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

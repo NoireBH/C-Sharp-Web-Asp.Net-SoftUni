@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Forum.Data\ForumApp.Data.csproj" />
-    <ProjectReference Include="..\Forum.ViewModels\ForumApp.ViewModels.csproj" />
+    <ProjectReference Include="..\ForumApp.Common\ForumApp.Common.csproj" />
   </ItemGroup>
 
 </Project>
