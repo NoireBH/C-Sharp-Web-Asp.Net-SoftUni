@@ -13,6 +13,8 @@ namespace TaskBoardApp.Controllers
         {
             this.boardService = boardService;
         }
+
+        [HttpGet]
         public async Task<IActionResult> All()
         {
             var allBoards = await boardService.GetAllAsync();

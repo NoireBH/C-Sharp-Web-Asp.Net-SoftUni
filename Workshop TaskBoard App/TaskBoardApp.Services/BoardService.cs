@@ -20,7 +20,15 @@ namespace TaskBoardApp.Services
             this.context = context;
         }
 
-        public async Task<IEnumerable<BoardViewModel>> GetAllAsync()
+		public async Task<bool> ExistsBoardWithIdAsync(int id)
+		{
+			bool exists = await context
+                .Boards.AnyAsync(x => x.Id == id);
+
+            return exists;
+		}
+
+		public async Task<IEnumerable<BoardViewModel>> GetAllAsync()
         {
             var allBoards = await context
                 .Boards
@@ -36,6 +44,20 @@ namespace TaskBoardApp.Services
                     })
                     .ToArray()
 
+                })
+                .ToArrayAsync();
+
+            return allBoards;
+        }
+
+        public async Task<IEnumerable<TaskBoardModel>> GetBoardsAsync()
+        {
+            var allBoards = await context
+                .Boards
+                .Select(b => new TaskBoardModel()
+                {
+                    Id = b.Id,
+                    Name = b.Name
                 })
                 .ToArrayAsync();
 
