@@ -104,5 +104,28 @@ namespace TaskBoardApp.Services
 			context.Tasks.Remove(task);
 			await context.SaveChangesAsync();
 		}
+
+		public int GetTaskInBoardCount(object boardName)
+		{
+			var tasksInBoard = context
+				.Tasks
+				.Where(t => t.Board.Name == boardName).Count();
+
+			return tasksInBoard;
+		}
+
+		public int GetUserTaskCount(string userId)
+		{
+			var taskCount = context
+				.Tasks
+				.Where(t => t.OwnerId == userId).Count();
+
+			return taskCount;
+		}
+
+		public int GetAllTasksCount()
+		{
+			return context.Tasks.Count();
+		}
 	}
 }

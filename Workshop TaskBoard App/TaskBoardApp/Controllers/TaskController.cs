@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskBoardApp.Extensions;
 using TaskBoardApp.Services.Interfaces;
@@ -7,6 +8,7 @@ using Task = TaskBoardApp.Data.Models.Task;
 
 namespace TaskBoardApp.Controllers
 {
+    [Authorize]
     public class TaskController : Controller
     {
         private readonly IBoardService boardService;

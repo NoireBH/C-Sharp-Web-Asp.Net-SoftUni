@@ -20,5 +20,11 @@ namespace TaskBoardApp.Services.Interfaces
 		public System.Threading.Tasks.Task EditTaskAsync(Data.Models.Task task, TaskFormModel taskModel);
 
 		public Task Delete(Data.Models.Task task);
+
+		public int GetTaskInBoardCount(object boardName);
+
+		public int GetUserTaskCount(string userId);
+
+		public int GetAllTasksCount();
 	}
 }
