@@ -36,6 +36,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddControllersWithViews();
+string text = "test";
 
 var app = builder.Build();
 
