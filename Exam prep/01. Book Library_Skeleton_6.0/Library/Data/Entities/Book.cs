@@ -30,6 +30,7 @@ namespace Library.Data.Entities
         public string ImageUrl { get; set; } = null!;
 
         [Required]
+        
         public decimal Rating { get; set; }
 
         [Required]

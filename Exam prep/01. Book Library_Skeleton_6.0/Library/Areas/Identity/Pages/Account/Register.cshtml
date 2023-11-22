@@ -1,11 +1,12 @@
-﻿@{
+﻿@using Library.Areas.Identity.Pages.Account;
+@model RegisterModel
+
+@{
     ViewData["Title"] = "Register";
 }
 
 
 <h1>@ViewData["Title"]</h1>
-
-@*
 
 <div class="row">
     <div class="col-md-4 offset-md-4">
@@ -13,9 +14,9 @@
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="text-center mb-3">
-                <label asp-for="Input.UserName">Username</label>
-                <input asp-for="Input.UserName" class="form-control " autocomplete="username" aria-required="true" />
-                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                <label asp-for="Input.Email">Username</label>
+                <input asp-for="Input.Email" class="form-control " autocomplete="username" aria-required="true" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="text-center mb-3">
                 <label asp-for="Input.Email">Email</label>
@@ -42,4 +43,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-*@

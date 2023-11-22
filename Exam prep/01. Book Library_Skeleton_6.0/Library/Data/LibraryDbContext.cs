@@ -23,6 +23,8 @@ namespace Library.Data
         {
             builder.Entity<ApplicationUserBook>()
                 .HasKey(e => new { e.ApplicationUserId, e.BookId });
+            builder.Entity<Book>().Property(p => p.Rating)
+                .HasPrecision(18, 2);
 
             /* builder
                 .Entity<Book>()

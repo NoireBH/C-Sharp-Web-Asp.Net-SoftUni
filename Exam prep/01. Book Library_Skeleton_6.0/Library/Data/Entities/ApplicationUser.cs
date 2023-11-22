@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Library.Data.Entities
 {
-    public class ApplicationUser
+    public class ApplicationUser 
     {
         public ApplicationUser()
         {
