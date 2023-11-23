@@ -11,8 +11,6 @@ namespace Library.Data
         {
         }
 
-        public DbSet<IdentityUserBook> ApplicationUsersBooks { get; set; }
-
         public DbSet<Book> Books { get; set; }
 
         public DbSet<Category> Categories { get; set; }

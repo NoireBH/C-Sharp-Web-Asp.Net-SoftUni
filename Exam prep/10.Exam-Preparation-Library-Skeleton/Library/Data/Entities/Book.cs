@@ -8,7 +8,7 @@ namespace Library.Data.Entities
     {
         public Book()
         {
-            ApplicationUsersBooks = new HashSet<IdentityUserBook>();
+            UsersBooks = new HashSet<IdentityUserBook>();
         }
 
         [Key]
@@ -40,6 +40,6 @@ namespace Library.Data.Entities
         [Required]
         public Category Category { get; set; } = null!;
 
-        public ICollection<IdentityUserBook> ApplicationUsersBooks { get; set; }
+        public ICollection<IdentityUserBook> UsersBooks { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace Library.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public IActionResult Index()
         {
             if (User?.Identity?.IsAuthenticated ??false)
