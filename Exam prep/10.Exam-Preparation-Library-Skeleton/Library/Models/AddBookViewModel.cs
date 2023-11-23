@@ -19,6 +19,7 @@ namespace Library.Models
 		public string Author { get; set; } = null!;
 
 		[Required]
+		[Range(EntityValidations.Book.RatingMinLength, EntityValidations.Book.RatingMaxLength)]
 		public decimal Rating { get; set; }
 
 		[Required]

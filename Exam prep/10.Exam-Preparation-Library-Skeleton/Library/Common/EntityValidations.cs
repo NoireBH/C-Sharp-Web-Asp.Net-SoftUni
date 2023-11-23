@@ -26,8 +26,8 @@
 			public const int DescriptionMinLength = 5;
 			public const int DescriptionMaxLength = 5000;
 
-			public const decimal RatingMinLength = 0.00m;
-			public const decimal RatingMaxLength = 10.00m;
+			public const double RatingMinLength = 0;
+			public const double RatingMaxLength = 10;
 		}
 
 		public class Category
