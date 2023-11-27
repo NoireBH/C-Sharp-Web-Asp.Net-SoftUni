@@ -22,6 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\HouseRenting.Data.Models\HouseRenting.Data.Models.csproj" />
     <ProjectReference Include="..\HouseRenting.Data\HouseRenting.Data.csproj" />
+    <ProjectReference Include="..\HouseRenting.Services.Data\HouseRenting.Services.Data.csproj" />
+    <ProjectReference Include="..\HouseRenting.Web.Infrastructure\HouseRenting.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\HouseRenting.Web.ViewModels\HouseRenting.Web.ViewModels.csproj" />
   </ItemGroup>
 

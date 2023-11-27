@@ -24,6 +24,8 @@ namespace HouseRenting.Web.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
+            builder.ApplyConfiguration(new CategoryEntityConfiguration());
             builder.ApplyConfiguration(new HouseEntityConfiguration());
 
             base.OnModelCreating(builder);

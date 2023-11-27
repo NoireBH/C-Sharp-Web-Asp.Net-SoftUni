@@ -1,5 +1,7 @@
 using HouseRenting.Data.Models;
+using HouseRenting.Services.Data.Interfaces;
 using HouseRenting.Web.Data;
+using HouseRenting.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +29,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 })
  .AddRoles<IdentityRole<Guid>>()
  .AddEntityFrameworkStores<HouseRentingDbContext>();
+
+builder.Services.AddApplicationServices(typeof(IHouseService));
+
 
 builder.Services.AddControllersWithViews();
 
