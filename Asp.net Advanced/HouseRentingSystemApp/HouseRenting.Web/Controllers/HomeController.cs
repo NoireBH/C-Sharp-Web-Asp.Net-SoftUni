@@ -16,7 +16,7 @@ namespace HouseRenting.Web.Controllers
 
 		public async Task<IActionResult> Index()
         {
-			var lastThreeHouses = await houseService.GetLastThreeHouses();
+			var lastThreeHouses = await houseService.GetLastThreeHousesAsync();
 
 			return View(lastThreeHouses);
 		}

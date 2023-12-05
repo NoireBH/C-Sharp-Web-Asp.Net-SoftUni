@@ -1,3 +1,4 @@
+using HouseRenting.Common.ModelBinders;
 using HouseRenting.Data.Models;
 using HouseRenting.Services.Data.Interfaces;
 using HouseRenting.Web.Data;
@@ -13,6 +14,11 @@ string connectionString = builder.Configuration.GetConnectionString("SqlConnecti
 builder.Services.AddDbContext<HouseRentingDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddMvc((options) =>
+{
+	options.ModelBinderProviders.Insert(0, new CustomBinderProvider());
+});
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
