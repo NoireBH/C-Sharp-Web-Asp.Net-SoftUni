@@ -15,7 +15,8 @@ namespace HouseRenting.Common.ModelBinders
 			{
 				throw new ArgumentNullException(nameof(context));
 			}
-			if (context.Metadata.ModelType == typeof(decimal))
+			if (context.Metadata.ModelType == typeof(decimal)
+				|| context.Metadata.ModelType == typeof(decimal))
 			{
 				return new DecimalModelBinder();
 			}

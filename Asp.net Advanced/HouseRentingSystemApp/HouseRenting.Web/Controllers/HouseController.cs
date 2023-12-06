@@ -23,7 +23,7 @@ namespace HouseRenting.Web.Controllers
         [AllowAnonymous]
 		public async Task<IActionResult> All()
 		{
-			return View();
+			return View(this.Ok());
 		}
 
 		public async Task<IActionResult> Add()
@@ -41,5 +41,48 @@ namespace HouseRenting.Web.Controllers
 				Categories = await houseService.GetAllHouseCategoriesAsync()
 			});
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> Add(AddHouseFormModel model)
+		{
+			bool agentExists = await agentService.ExistsByIdAsync(User.GetId()!);
+
+            if (!agentExists)
+            {
+				return RedirectToAction(nameof(AgentController.Become), "Agent");
+            }
+
+			bool houseCategoryExists = await houseService.CategoryExists(model.CategoryId);
+
+			if (!houseCategoryExists)
+			{
+				//makes the model state invalid just like !ModelState.Isvalid
+				ModelState.AddModelError(nameof(model.CategoryId), "This category does not exist!");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				model.Categories = await houseService.GetAllHouseCategoriesAsync();
+				return View(model);
+			}
+
+
+			//should always use try-catch incase of Database errors or incase the db goes offline!
+			try
+			{
+				string? agentId = await agentService.GetAgentIdByUserIdAsync(User.GetId()!);
+
+				await houseService.Create(model.Title, model.Address, model.Description, model.ImageUrl, model.PricePerMonth, model.CategoryId, agentId);
+			}
+			catch (Exception e)
+			{
+				ModelState.AddModelError(string.Empty, "Unexpected error has occured, please try again...");
+				model.Categories = await houseService.GetAllHouseCategoriesAsync();
+				return View(model);
+
+			}
+
+			return RedirectToAction("All", "House");
+        }
 	}
 }

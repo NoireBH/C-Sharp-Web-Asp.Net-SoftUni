@@ -24,18 +24,18 @@ namespace HouseRenting.Web.ViewModels.House
 		public string Description { get; set; } = null!;
 
 		[Required]
-		[Display(Name = "Image Url")]
+		[Display(Name = "Image Link")]
 		[MaxLength(ImageUrlMaxLength)]
 		public string ImageUrl { get; set; } = null!;
 
 		[Required]
 		[Display(Name = "Price Per Month")]
 		[Range(typeof(decimal), PricePerMonthMinValue, PricePerMonthMaxValue)]
-		public string PricePerMonth { get; set; } = null!;
+		public decimal PricePerMonth { get; set; }
 
 		[Required]
 		[Display(Name = "Category")]
-		public string CategoryId { get; set; } = null!;
+		public int CategoryId { get; set; }
 
 		public IEnumerable<HouseCategoryFormModel> Categories { get; set; }
 

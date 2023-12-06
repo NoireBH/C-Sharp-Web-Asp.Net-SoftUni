@@ -19,10 +19,10 @@ namespace HouseRenting.Common
             public const int TitleMinLength = 10;
             public const int TitleMaxLength = 50;
 
-            public const int AddressMinLength = 30;
+            public const int AddressMinLength = 10;
             public const int AddressMaxLength = 150;
 
-            public const int DescriptionMinLength = 50;
+            public const int DescriptionMinLength = 10;
             public const int DescriptionMaxLength = 500;
 
             public const int ImageUrlMaxLength = 2048;
