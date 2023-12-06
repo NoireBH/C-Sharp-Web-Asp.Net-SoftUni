@@ -10,6 +10,7 @@
     <ProjectReference Include="..\HouseRenting.Common\HouseRenting.Common.csproj" />
     <ProjectReference Include="..\HouseRenting.Data.Models\HouseRenting.Data.Models.csproj" />
     <ProjectReference Include="..\HouseRenting.Data\HouseRenting.Data.csproj" />
+    <ProjectReference Include="..\HouseRenting.Services.Data.Models\HouseRenting.Services.Data.Models.csproj" />
     <ProjectReference Include="..\HouseRenting.Web.ViewModels\HouseRenting.Web.ViewModels.csproj" />
   </ItemGroup>
 

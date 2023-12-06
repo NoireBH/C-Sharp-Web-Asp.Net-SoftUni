@@ -1,5 +1,7 @@
-﻿using HouseRenting.Web.ViewModels.Category;
+﻿using HouseRenting.Services.Data.Models.House;
+using HouseRenting.Web.ViewModels.Category;
 using HouseRenting.Web.ViewModels.Home;
+using HouseRenting.Web.ViewModels.House;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,11 @@ namespace HouseRenting.Services.Data.Interfaces
 
 		Task<bool> CategoryExists(int categoryId);
 
-		Task<int> Create(string title, string address, string description,
+		Task Create(string title, string address, string description,
 			 string imageUrl, decimal price, int categoryId, string agentId);
+
+		Task<AllHousesFilteredServiceModel> AllAsync(AllHousesQueryModel model);
+
+		Task<IEnumerable<string>> GetAllCategoryNamesAsync();
 	}
 }
