@@ -90,5 +90,27 @@ namespace HouseRenting.Web.Controllers
 
 			return RedirectToAction("All", "House");
         }
+
+		public async Task<IActionResult> Mine()
+		{
+			IEnumerable<HouseAllViewModel> myHouses = null;
+
+			string? userId = User.GetId();
+			bool agentExists = await agentService.ExistsByIdAsync(userId);
+
+			if (agentExists)
+			{
+				var agentId = await agentService.GetAgentIdByUserIdAsync(userId);
+
+				myHouses = await houseService.GetAllAgentHousesById(agentId);
+			}
+			else
+			{
+				myHouses = await houseService.GetAllUserHousesById(userId);
+			}
+
+			return View(myHouses);
+			
+		}
 	}
 }

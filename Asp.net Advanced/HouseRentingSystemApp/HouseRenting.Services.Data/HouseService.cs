@@ -47,9 +47,9 @@ namespace HouseRenting.Services.Data
 			housesQuery = model.HouseSorting switch
 			{
 				HouseSort.Newest => housesQuery
-				.OrderBy(h => h.CreatedOn),
-				HouseSort.Oldest => housesQuery
 				.OrderByDescending(h => h.CreatedOn),
+				HouseSort.Oldest => housesQuery
+				.OrderBy(h => h.CreatedOn),
 				HouseSort.PriceDescending => housesQuery
 				.OrderByDescending(h => h.PricePerMonth),
 				HouseSort.PriceAscending => housesQuery
@@ -105,6 +105,24 @@ namespace HouseRenting.Services.Data
 			await dbContext.SaveChangesAsync();
 		}
 
+		public async Task<IEnumerable<HouseAllViewModel>> GetAllAgentHousesById(string agentId)
+		{
+			var houses = await dbContext.Houses
+				.Where(h => h.AgentId.ToString() == agentId)
+				.Select(h => new HouseAllViewModel
+				{
+					Id = h.Id.ToString(),
+					Title = h.Title,
+					Address = h.Address,
+					ImageUrl = h.ImageUrl,
+					PricePerMonth = h.PricePerMonth,
+					IsRented = h.RenterId != null
+				})
+				.ToListAsync();
+
+			return houses;
+		}
+
 		public async Task<IEnumerable<string>> GetAllCategoryNamesAsync()
 		{
 			return await dbContext.Categories.Select(c => c.Name).ToArrayAsync();
@@ -122,6 +140,24 @@ namespace HouseRenting.Services.Data
 				.ToListAsync();
 
 			return categories;
+		}
+
+		public async Task<IEnumerable<HouseAllViewModel>> GetAllUserHousesById(string userId)
+		{
+			var houses = await dbContext.Houses
+				.Where(h => h.RenterId.ToString() == userId)
+				.Select(h => new HouseAllViewModel
+				{
+					Id = h.Id.ToString(),
+					Title = h.Title,
+					Address = h.Address,
+					ImageUrl = h.ImageUrl,
+					PricePerMonth = h.PricePerMonth,
+					IsRented = h.RenterId != null
+				})
+				.ToListAsync();
+
+			return houses;
 		}
 
 		public async Task<IEnumerable<IndexViewModel>> GetLastThreeHousesAsync()
