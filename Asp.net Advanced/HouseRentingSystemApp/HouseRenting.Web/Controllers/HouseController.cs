@@ -112,5 +112,20 @@ namespace HouseRenting.Web.Controllers
 			return View(myHouses);
 			
 		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Details(string id)
+		{
+			bool houseExists = await houseService.ExistsById(id);
+
+			if (!houseExists)
+			{
+				return BadRequest();
+			}
+
+			var house = await houseService.GetHouseDetailsById(id);
+
+			return View(house);
+		}
 	}
 }

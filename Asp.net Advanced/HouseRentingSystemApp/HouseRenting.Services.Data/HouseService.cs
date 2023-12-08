@@ -2,6 +2,7 @@
 using HouseRenting.Services.Data.Interfaces;
 using HouseRenting.Services.Data.Models.House;
 using HouseRenting.Web.Data;
+using HouseRenting.Web.ViewModels.Agent;
 using HouseRenting.Web.ViewModels.Category;
 using HouseRenting.Web.ViewModels.Home;
 using HouseRenting.Web.ViewModels.House;
@@ -105,6 +106,11 @@ namespace HouseRenting.Services.Data
 			await dbContext.SaveChangesAsync();
 		}
 
+		public async Task<bool> ExistsById(string houseId)
+		{
+			return await dbContext.Houses.AnyAsync(h => h.Id.ToString() == houseId);
+		}
+
 		public async Task<IEnumerable<HouseAllViewModel>> GetAllAgentHousesById(string agentId)
 		{
 			var houses = await dbContext.Houses
@@ -158,6 +164,31 @@ namespace HouseRenting.Services.Data
 				.ToListAsync();
 
 			return houses;
+		}
+
+		public async Task<HouseDetailsViewModel> GetHouseDetailsById(string houseId)
+		{
+			var house = await dbContext.Houses
+				.Where(h => h.Id.ToString() ==  houseId)
+				.Select(h => new HouseDetailsViewModel
+				{
+					Id= h.Id.ToString(),
+					Title = h.Title,
+					Address = h.Address,
+					ImageUrl = h.ImageUrl,
+					PricePerMonth = h.PricePerMonth,
+					Description = h.Description,
+					Category = h.Category.Name,
+					IsRented = h.RenterId != null,
+					Agent = new AgentDetailsViewModel()
+					{
+						Email = h.Agent.User.Email,
+						PhoneNumber = h.Agent.PhoneNumber
+					}
+				})
+				.FirstOrDefaultAsync();
+
+			return house!;
 		}
 
 		public async Task<IEnumerable<IndexViewModel>> GetLastThreeHousesAsync()
