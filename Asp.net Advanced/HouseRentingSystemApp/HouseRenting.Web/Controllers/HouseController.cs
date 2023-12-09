@@ -14,14 +14,14 @@ namespace HouseRenting.Web.Controllers
 		private readonly IHouseService houseService;
 		private readonly IAgentService agentService;
 
-        public HouseController(IHouseService houseService, IAgentService agentService)
-        {
-            this.houseService = houseService;
+		public HouseController(IHouseService houseService, IAgentService agentService)
+		{
+			this.houseService = houseService;
 			this.agentService = agentService;
-        }
+		}
 
-        [AllowAnonymous]
-		public async Task<IActionResult> All([FromQuery]AllHousesQueryModel queryModel)
+		[AllowAnonymous]
+		public async Task<IActionResult> All([FromQuery] AllHousesQueryModel queryModel)
 		{
 			var queryResult = await houseService.AllAsync(queryModel);
 
@@ -34,29 +34,29 @@ namespace HouseRenting.Web.Controllers
 
 		public async Task<IActionResult> Add()
 		{
-			bool agentExists = await agentService.ExistsByIdAsync(User.GetId()!);
+			bool isAgent = await agentService.ExistsByIdAsync(User.GetId()!);
 
-			if (!agentExists)
+			if (!isAgent)
 			{
 				TempData[ErrorMessage] = "You have to be an agent in order to add a new house!";
 				return RedirectToAction(nameof(AgentController.Become), "Agent");
 			}
 
-			return View(new AddHouseFormModel
+			return View(new AddOrEditHouseFormModel
 			{
 				Categories = await houseService.GetAllHouseCategoriesAsync()
 			});
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Add(AddHouseFormModel model)
+		public async Task<IActionResult> Add(AddOrEditHouseFormModel model)
 		{
 			bool agentExists = await agentService.ExistsByIdAsync(User.GetId()!);
 
-            if (!agentExists)
-            {
+			if (!agentExists)
+			{
 				return RedirectToAction(nameof(AgentController.Become), "Agent");
-            }
+			}
 
 			bool houseCategoryExists = await houseService.CategoryExists(model.CategoryId);
 
@@ -89,7 +89,7 @@ namespace HouseRenting.Web.Controllers
 			}
 
 			return RedirectToAction("All", "House");
-        }
+		}
 
 		public async Task<IActionResult> Mine()
 		{
@@ -110,7 +110,7 @@ namespace HouseRenting.Web.Controllers
 			}
 
 			return View(myHouses);
-			
+
 		}
 
 		[AllowAnonymous]
@@ -126,6 +126,87 @@ namespace HouseRenting.Web.Controllers
 			var house = await houseService.GetHouseDetailsById(id);
 
 			return View(house);
+		}
+
+		public async Task<IActionResult> Edit(string id)
+		{
+			if (!await houseService.ExistsById(id))
+			{
+				return BadRequest();
+			}
+
+			if (!await agentService.HasHouseById(id, User.GetId()!))
+			{
+				TempData[ErrorMessage] = "You must be the owner of this house to be able to edit!";
+				return RedirectToAction("Mine", "House");
+			}
+
+			var house = await houseService.GetHouseDetailsById(id);
+			int houseCategoryId = await houseService.GetCategoryId(id);
+
+			var houseModel = new AddOrEditHouseFormModel()
+			{
+				Title = house.Title,
+				Address = house.Address,
+				Description = house.Description,
+				ImageUrl = house.ImageUrl,
+				PricePerMonth = house.PricePerMonth,
+				CategoryId = houseCategoryId,
+				Categories = await houseService.GetAllHouseCategoriesAsync()
+			};
+
+			return View(houseModel);
+
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Edit(string id, AddOrEditHouseFormModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View();
+			}
+
+			bool isAgent = await agentService.ExistsByIdAsync(User.GetId()!);
+
+			if (!isAgent)
+			{
+				return RedirectToAction(nameof(AgentController.Become), "Agent");
+			}
+
+			bool houseCategoryExists = await houseService.CategoryExists(model.CategoryId);
+
+			if (!houseCategoryExists)
+			{
+				//makes the model state invalid just like !ModelState.Isvalid
+				ModelState.AddModelError(nameof(model.CategoryId), "This category does not exist!");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				model.Categories = await houseService.GetAllHouseCategoriesAsync();
+				return View(model);
+			}
+
+
+			//should always use try-catch incase of Database errors or incase the db goes offline!
+			try
+			{
+				string? agentId = await agentService.GetAgentIdByUserIdAsync(User.GetId()!);
+
+				await houseService.Create(model.Title, model.Address, model.Description, model.ImageUrl, model.PricePerMonth, model.CategoryId, agentId);
+			}
+			catch (Exception e)
+			{
+				ModelState.AddModelError(string.Empty, "Unexpected error has occured, please try again...");
+				model.Categories = await houseService.GetAllHouseCategoriesAsync();
+				return View(model);
+
+			}
+
+			await houseService.EditHouse(model, id);
+
+			return RedirectToAction(nameof(Details), new { id = id });
 		}
 	}
 }

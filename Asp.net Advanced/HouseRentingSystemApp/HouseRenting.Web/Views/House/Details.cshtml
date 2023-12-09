@@ -39,9 +39,9 @@
 			<form class="mb-2">
 				@if (this.User.Identity.IsAuthenticated)
 				{
-					<a class="btn btn-warning" asp-controller="House" aspaction="Edit"
+					<a class="btn btn-warning" asp-controller="House" asp-action="Edit"
 					   asp-route-id="@Model.Id">Edit</a>
-					<a class="ml-2 btn btn-danger" asp-controller="House" aspaction="Delete"
+					<a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
 					   asp-route-id="@Model.Id">Delete</a>
 					@if (!Model.IsRented)
 					{

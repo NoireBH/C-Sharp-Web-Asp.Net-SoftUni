@@ -32,5 +32,9 @@ namespace HouseRenting.Services.Data.Interfaces
 		Task<bool> ExistsById(string houseId);
 
 		Task<HouseDetailsViewModel> GetHouseDetailsById(string houseId);
+
+		Task EditHouse(AddOrEditHouseFormModel model, string houseId);
+
+		Task<int> GetCategoryId(string houseId);
 	}
 }

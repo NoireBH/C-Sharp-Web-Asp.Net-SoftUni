@@ -4,9 +4,9 @@ using static HouseRenting.Common.EntityValidationConstants.House;
 
 namespace HouseRenting.Web.ViewModels.House
 {
-	public class AddHouseFormModel
+	public class AddOrEditHouseFormModel
 	{
-        public AddHouseFormModel()
+        public AddOrEditHouseFormModel()
         {
 			Categories = new HashSet<HouseCategoryFormModel>();
         }

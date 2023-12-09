@@ -106,6 +106,20 @@ namespace HouseRenting.Services.Data
 			await dbContext.SaveChangesAsync();
 		}
 
+		public async Task EditHouse(AddOrEditHouseFormModel model, string houseId)
+		{
+			House? house = await dbContext.Houses.FirstAsync(h => h.Id.ToString() == houseId);
+
+			house!.Title = model.Title;
+			house.Address = model.Address;
+			house.Description = model.Description;
+			house.ImageUrl = model.ImageUrl;
+			house.PricePerMonth = model.PricePerMonth;
+			house.CategoryId = model.CategoryId;
+
+			await dbContext.SaveChangesAsync();
+		}
+
 		public async Task<bool> ExistsById(string houseId)
 		{
 			return await dbContext.Houses.AnyAsync(h => h.Id.ToString() == houseId);
@@ -206,6 +220,16 @@ namespace HouseRenting.Services.Data
 				.ToArrayAsync();
 
 			return lastThreeHouses;
+		}
+
+		public async Task<int> GetCategoryId(string houseId)
+		{
+			int categoryId = await dbContext.Houses
+				.Where( h => h.Id.ToString() == houseId )
+				.Select(h => h.CategoryId)
+				.FirstOrDefaultAsync();
+
+			return categoryId;
 		}
 	}
 }
