@@ -80,7 +80,7 @@ namespace HouseRenting.Web.Controllers
 
 				await houseService.Create(model.Title, model.Address, model.Description, model.ImageUrl, model.PricePerMonth, model.CategoryId, agentId);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				ModelState.AddModelError(string.Empty, "Unexpected error has occured, please try again...");
 				model.Categories = await houseService.GetAllHouseCategoriesAsync();
@@ -192,21 +192,64 @@ namespace HouseRenting.Web.Controllers
 			//should always use try-catch incase of Database errors or incase the db goes offline!
 			try
 			{
-				string? agentId = await agentService.GetAgentIdByUserIdAsync(User.GetId()!);
-
-				await houseService.Create(model.Title, model.Address, model.Description, model.ImageUrl, model.PricePerMonth, model.CategoryId, agentId);
+				await houseService.EditHouse(model, id);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
-				ModelState.AddModelError(string.Empty, "Unexpected error has occured, please try again...");
+				ModelState.AddModelError
+					(string.Empty, "Unexpected error has occured, while trying to edit house details, please try again later...");
 				model.Categories = await houseService.GetAllHouseCategoriesAsync();
 				return View(model);
 
-			}
-
-			await houseService.EditHouse(model, id);
+			}			
 
 			return RedirectToAction(nameof(Details), new { id = id });
+		}
+
+		public async Task<IActionResult> Delete(string id)
+		{
+			if (!await houseService.ExistsById(id))
+			{
+				TempData[ErrorMessage] = "A house with that id does not exist!";
+				return RedirectToAction("All", "House");
+			}
+
+			if (!await agentService.HasHouseById(id, User.GetId()!))
+			{
+				TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
+				return RedirectToAction("Mine", "House");
+			}
+
+			var house = await houseService.GetHouseDetailsById(id);
+
+			var houseModel = new DeleteHouseViewModel()
+			{
+				Title = house.Title,
+				Address = house.Address,
+				ImageUrl = house.ImageUrl,
+			};
+
+			return View(houseModel);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Delete(DeleteHouseViewModel model)
+		{
+			if (!await houseService.ExistsById(model.Id))
+			{
+				TempData[ErrorMessage] = "A house with that id does not exist!";
+				return RedirectToAction("All", "House");
+			}
+
+			if (!await agentService.HasHouseById(model.Id, User.GetId()!))
+			{
+				TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
+				return RedirectToAction("All", "House");
+			}
+
+			await houseService.Delete(model.Id);
+
+			return RedirectToAction(nameof(Mine));
 		}
 	}
 }

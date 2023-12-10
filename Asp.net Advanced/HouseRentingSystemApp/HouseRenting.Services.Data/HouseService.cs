@@ -231,5 +231,14 @@ namespace HouseRenting.Services.Data
 
 			return categoryId;
 		}
+
+		public async Task Delete(string houseId)
+		{
+			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == houseId);
+
+			dbContext.Houses.Remove(house!);
+			await dbContext.SaveChangesAsync();
+
+		}
 	}
 }

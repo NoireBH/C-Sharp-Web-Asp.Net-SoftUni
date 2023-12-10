@@ -36,5 +36,7 @@ namespace HouseRenting.Services.Data.Interfaces
 		Task EditHouse(AddOrEditHouseFormModel model, string houseId);
 
 		Task<int> GetCategoryId(string houseId);
+
+		Task Delete(string houseId);
 	}
 }
