@@ -38,5 +38,11 @@ namespace HouseRenting.Services.Data.Interfaces
 		Task<int> GetCategoryId(string houseId);
 
 		Task Delete(string houseId);
+
+		Task<bool> IsRented(string id);
+
+		Task<bool> IsRentedByCurrentUser(string houseId, string userId);
+
+		Task Rent(string houseId, string userId);
 	}
 }

@@ -240,5 +240,31 @@ namespace HouseRenting.Services.Data
 			await dbContext.SaveChangesAsync();
 
 		}
+
+		public async Task<bool> IsRented(string id)
+		{
+			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == id);
+			var result = house!.RenterId != null;
+			return result;
+		}
+
+		public async Task<bool> IsRentedByCurrentUser(string houseId, string userId)
+		{
+			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == houseId);
+
+			if (house!.RenterId.ToString() != userId)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public async Task Rent(string houseId, string userId)
+		{
+			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == houseId);
+			house.RenterId = Guid.Parse(userId);
+			await dbContext.SaveChangesAsync();
+		}
 	}
 }

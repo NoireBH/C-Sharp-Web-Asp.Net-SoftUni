@@ -251,5 +251,30 @@ namespace HouseRenting.Web.Controllers
 
 			return RedirectToAction(nameof(Mine));
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> Rent(string id)
+		{
+			if (!await houseService.ExistsById(id))
+			{
+				TempData[ErrorMessage] = "A house with that id does not exist!";
+				return RedirectToAction("All", "House");
+			}
+
+			if (!await agentService.ExistsByIdAsync(User.GetId()!))
+			{
+				TempData[ErrorMessage] = "You have to be an agent in order to add a new house!";
+				return RedirectToAction(nameof(AgentController.Become), "Agent");
+			}
+
+			if (await houseService.IsRented(id))
+			{
+				TempData[ErrorMessage] = "The house is already rented!";
+				return RedirectToAction("All", "House");
+			}
+
+			await houseService.Rent(id, User.GetId()!);
+			return RedirectToAction(nameof(All));
+		}
 	}
 }
