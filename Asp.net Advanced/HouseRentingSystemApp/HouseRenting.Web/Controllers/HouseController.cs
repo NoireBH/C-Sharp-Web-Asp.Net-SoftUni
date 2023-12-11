@@ -276,5 +276,25 @@ namespace HouseRenting.Web.Controllers
 			await houseService.Rent(id, User.GetId()!);
 			return RedirectToAction(nameof(All));
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> Leave(string id)
+		{
+			if (!await houseService.ExistsById(id))
+			{
+				TempData[ErrorMessage] = "A house with that id does not exist!";
+				return RedirectToAction("All", "House");
+			}
+
+			if (!await houseService.IsRentedByCurrentUser(id, User.GetId()!))
+			{
+				TempData[ErrorMessage] = "You need to be the renter of this house in order to leave it!";
+				return RedirectToAction("All", "House");
+			}
+
+			await houseService.Leave(id);
+
+			return RedirectToAction(nameof(Mine));
+		}
 	}
 }

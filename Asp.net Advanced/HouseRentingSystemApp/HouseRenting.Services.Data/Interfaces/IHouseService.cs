@@ -44,5 +44,7 @@ namespace HouseRenting.Services.Data.Interfaces
 		Task<bool> IsRentedByCurrentUser(string houseId, string userId);
 
 		Task Rent(string houseId, string userId);
+
+		Task Leave(string houseId);
 	}
 }
