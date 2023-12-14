@@ -45,19 +45,16 @@
 					   asp-route-id="@Model.Id">Delete</a>
 					@if (!Model.IsRented)
 					{
-						<form class="ml-2" asp-controller="House"
-							  asp-action="Rent" asp-route-id="@Model.Id"
-							  method="post">
-							<input class="btn btn-primary" type="submit"
-								   value="Rent" />
+						<form class="ml-2" asp-controller="House" asp-action="Rent" 
+						asp-route-id="@Model.Id" method="post">
+							<input class="btn btn-primary" type="submit" value="Rent" />
 						</form>
 					}
 					else
 					{
 						<form class="ml-2" asp-controller="House" asp-action="Leave"
 							  asp-route-id="@Model.Id" method="post">
-							<input class="btn btn-primary" type="submit"
-								   value="Leave" />
+							<input class="btn btn-primary" type="submit" value="Leave" />
 						</form>
 					}
 				}

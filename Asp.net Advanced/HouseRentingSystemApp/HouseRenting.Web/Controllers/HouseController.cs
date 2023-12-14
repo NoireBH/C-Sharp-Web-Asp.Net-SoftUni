@@ -96,18 +96,28 @@ namespace HouseRenting.Web.Controllers
 			IEnumerable<HouseAllViewModel> myHouses = null;
 
 			string? userId = User.GetId();
-			bool agentExists = await agentService.ExistsByIdAsync(userId);
 
-			if (agentExists)
+			try
 			{
-				var agentId = await agentService.GetAgentIdByUserIdAsync(userId);
+				bool agentExists = await agentService.ExistsByIdAsync(userId);
 
-				myHouses = await houseService.GetAllAgentHousesById(agentId);
+				if (agentExists)
+				{
+					var agentId = await agentService.GetAgentIdByUserIdAsync(userId);
+
+					myHouses = await houseService.GetAllAgentHousesById(agentId);
+				}
+				else
+				{
+					myHouses = await houseService.GetAllUserHousesById(userId);
+				}
 			}
-			else
+			catch (Exception)
 			{
-				myHouses = await houseService.GetAllUserHousesById(userId);
+
+				TempData[ErrorMessage] = "Something went wrong! Please try again or contact support.";
 			}
+
 
 			return View(myHouses);
 
@@ -201,53 +211,71 @@ namespace HouseRenting.Web.Controllers
 				model.Categories = await houseService.GetAllHouseCategoriesAsync();
 				return View(model);
 
-			}			
+			}
 
 			return RedirectToAction(nameof(Details), new { id = id });
 		}
 
 		public async Task<IActionResult> Delete(string id)
 		{
-			if (!await houseService.ExistsById(id))
+			try
 			{
-				TempData[ErrorMessage] = "A house with that id does not exist!";
-				return RedirectToAction("All", "House");
+				if (!await houseService.ExistsById(id))
+				{
+					TempData[ErrorMessage] = "A house with that id does not exist!";
+					return RedirectToAction("All", "House");
+				}
+
+				if (!await agentService.HasHouseById(id, User.GetId()!))
+				{
+					TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
+					return RedirectToAction("Mine", "House");
+				}
+
+				var house = await houseService.GetHouseDetailsById(id);
+
+				var houseModel = new DeleteHouseViewModel()
+				{
+					Title = house.Title,
+					Address = house.Address,
+					ImageUrl = house.ImageUrl,
+				};
+
+				return View(houseModel);
+			}
+			catch (Exception)
+			{
+
+				TempData[ErrorMessage] = "Something went wrong! Please try again or contact support.";
 			}
 
-			if (!await agentService.HasHouseById(id, User.GetId()!))
-			{
-				TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
-				return RedirectToAction("Mine", "House");
-			}
+			return View();
 
-			var house = await houseService.GetHouseDetailsById(id);
-
-			var houseModel = new DeleteHouseViewModel()
-			{
-				Title = house.Title,
-				Address = house.Address,
-				ImageUrl = house.ImageUrl,
-			};
-
-			return View(houseModel);
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Delete(DeleteHouseViewModel model)
 		{
-			if (!await houseService.ExistsById(model.Id))
+			try
 			{
-				TempData[ErrorMessage] = "A house with that id does not exist!";
-				return RedirectToAction("All", "House");
-			}
+				if (!await houseService.ExistsById(model.Id))
+				{
+					TempData[ErrorMessage] = "A house with that id does not exist!";
+					return RedirectToAction("All", "House");
+				}
 
-			if (!await agentService.HasHouseById(model.Id, User.GetId()!))
+				if (!await agentService.HasHouseById(model.Id, User.GetId()!))
+				{
+					TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
+					return RedirectToAction("All", "House");
+				}
+
+				await houseService.Delete(model.Id);
+			}
+			catch (Exception)
 			{
-				TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
-				return RedirectToAction("All", "House");
+				TempData[ErrorMessage] = "Something went wrong! Please try again or contact support.";
 			}
-
-			await houseService.Delete(model.Id);
 
 			return RedirectToAction(nameof(Mine));
 		}
@@ -255,44 +283,62 @@ namespace HouseRenting.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Rent(string id)
 		{
-			if (!await houseService.ExistsById(id))
+			try
 			{
-				TempData[ErrorMessage] = "A house with that id does not exist!";
-				return RedirectToAction("All", "House");
+				if (!await houseService.ExistsById(id))
+				{
+					TempData[ErrorMessage] = "A house with that id does not exist!";
+					return RedirectToAction("All", "House");
+				}
+
+				if (!await agentService.ExistsByIdAsync(User.GetId()!))
+				{
+					TempData[ErrorMessage] = "You have to be an agent in order to add a new house!";
+					return RedirectToAction(nameof(AgentController.Become), "Agent");
+				}
+
+				if (await houseService.IsRented(id))
+				{
+					TempData[ErrorMessage] = "The house is already rented!";
+					return RedirectToAction("All", "House");
+				}
+
+				await houseService.Rent(id, User.GetId()!);
+			}
+			catch (Exception)
+			{
+				TempData[ErrorMessage] = "Something went wrong! Please try again or contact support.";
 			}
 
-			if (!await agentService.ExistsByIdAsync(User.GetId()!))
-			{
-				TempData[ErrorMessage] = "You have to be an agent in order to add a new house!";
-				return RedirectToAction(nameof(AgentController.Become), "Agent");
-			}
 
-			if (await houseService.IsRented(id))
-			{
-				TempData[ErrorMessage] = "The house is already rented!";
-				return RedirectToAction("All", "House");
-			}
-
-			await houseService.Rent(id, User.GetId()!);
 			return RedirectToAction(nameof(All));
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Leave(string id)
 		{
-			if (!await houseService.ExistsById(id))
+			try
 			{
-				TempData[ErrorMessage] = "A house with that id does not exist!";
-				return RedirectToAction("All", "House");
+				if (!await houseService.ExistsById(id))
+				{
+					TempData[ErrorMessage] = "A house with that id does not exist!";
+					return RedirectToAction("All", "House");
+				}
+
+				if (!await houseService.IsRentedByCurrentUser(id, User.GetId()!))
+				{
+					TempData[ErrorMessage] = "You need to be the renter of this house in order to leave it!";
+					return RedirectToAction("All", "House");
+				}
+
+				await houseService.Leave(id);
+			}
+			catch (Exception)
+			{
+				TempData[ErrorMessage] = "Something went wrong! Please try again or contact support.";
 			}
 
-			if (!await houseService.IsRentedByCurrentUser(id, User.GetId()!))
-			{
-				TempData[ErrorMessage] = "You need to be the renter of this house in order to leave it!";
-				return RedirectToAction("All", "House");
-			}
 
-			await houseService.Leave(id);
 
 			return RedirectToAction(nameof(Mine));
 		}
