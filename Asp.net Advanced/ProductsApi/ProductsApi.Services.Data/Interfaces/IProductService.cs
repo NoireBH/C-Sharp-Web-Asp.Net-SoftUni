@@ -12,5 +12,9 @@ namespace ProductsApi.Services.Data.Interfaces
 		List<Product> GetAllProducts();
 
 		Task<Product?> GetById(int id);
+
+		Task<Product> CreateProduct(string name, string description);
+
+		void EditProduct(int id, Product product);
 	}
 }

@@ -19,6 +19,30 @@ namespace ProductsApi.Services.Data
 			this.context = context;
 		}
 
+		public async Task<Product> CreateProduct(string name, string description)
+		{
+			Product product = new Product()
+			{
+				Name = name,
+				Description = description
+			};
+
+			await context.Products.AddAsync(product);
+			await context.SaveChangesAsync();
+
+			return product;
+		}
+
+		public async void EditProduct(int id, Product product)
+		{
+			var productToEdit = await context.Products.FindAsync(id);
+
+			productToEdit.Name = product.Name;
+			productToEdit.Description = product.Description;
+
+			await context.SaveChangesAsync();
+		}
+
 		public List<Product> GetAllProducts()
 		{
 			return context.Products.ToList();

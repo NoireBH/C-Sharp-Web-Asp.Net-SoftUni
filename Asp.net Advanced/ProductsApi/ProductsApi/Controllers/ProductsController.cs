@@ -6,7 +6,7 @@ using ProductsApi.Services.Data.Interfaces;
 namespace ProductsApi.Controllers
 {
 	[ApiController]
-	[Route("api/products")]
+	[Route("api/[controller]")]
 	public class ProductsController : Controller
 	{
 		private readonly IProductService productService;
@@ -22,7 +22,7 @@ namespace ProductsApi.Controllers
 			return  productService.GetAllProducts();
 		}
 
-		[HttpGet("{id}")]
+		[HttpGet("{id}", Name = "GetProduct")]
 		public async Task<ActionResult<Product>> GetProduct(int id)
 		{
 			var product = await productService.GetById(id);
@@ -33,6 +33,33 @@ namespace ProductsApi.Controllers
 			}
 
 			return product;
+		}
+
+		[HttpPost]
+		public async Task<ActionResult<Product>> PostProduct(Product product)
+		{
+			product = await productService.CreateProduct(product.Name,product.Description);
+
+			return CreatedAtAction(nameof(GetProduct), product, product);
+		}
+
+		[HttpPut("{id}")]
+		public async Task<IActionResult> PutProduct(int id , Product product)
+		{
+			if (id != product.Id)
+			{
+				return BadRequest();
+			}
+
+
+			if (await productService.GetById(id) == null)
+			{
+				return NotFound();
+			}
+
+			productService.EditProduct(id, product);
+
+			return NoContent();
 		}
 	}
 }
