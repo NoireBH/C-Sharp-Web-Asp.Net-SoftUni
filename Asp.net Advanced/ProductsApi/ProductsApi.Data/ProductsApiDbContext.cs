@@ -13,7 +13,6 @@ namespace ProductsApi.Data
 		public ProductsApiDbContext(DbContextOptions<ProductsApiDbContext> options)
 			: base(options)
 		{
-			this.Database.EnsureCreated();
 		}
 
 		public DbSet<Product> Products { get; set; } = null!;
