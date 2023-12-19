@@ -57,7 +57,20 @@ namespace ProductsApi.Controllers
 				return NotFound();
 			}
 
-			productService.EditProduct(id, product);
+			await productService.EditProduct(id, product);
+
+			return NoContent();
+		}
+
+		[HttpPatch("{id}")]
+		public async Task<IActionResult> PatchProduct(int id, Product product)
+		{
+			if (await productService.GetById(id) == null)
+			{
+				return NotFound();
+			}
+
+			await productService.EditProductPartially(id, product);
 
 			return NoContent();
 		}

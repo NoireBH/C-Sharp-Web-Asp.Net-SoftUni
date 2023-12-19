@@ -15,6 +15,8 @@ namespace ProductsApi.Services.Data.Interfaces
 
 		Task<Product> CreateProduct(string name, string description);
 
-		void EditProduct(int id, Product product);
+		Task EditProduct(int id, Product product);
+
+		Task EditProductPartially(int id, Product product);
 	}
 }

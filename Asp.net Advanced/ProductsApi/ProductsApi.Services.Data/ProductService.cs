@@ -33,7 +33,7 @@ namespace ProductsApi.Services.Data
 			return product;
 		}
 
-		public async void EditProduct(int id, Product product)
+		public async Task EditProduct(int id, Product product)
 		{
 			var productToEdit = await context.Products.FindAsync(id);
 
@@ -51,6 +51,18 @@ namespace ProductsApi.Services.Data
 		public async Task<Product?> GetById(int id)
 		{
 			return await context.Products.FindAsync(id);
+		}
+
+		public async Task EditProductPartially(int id, Product product)
+		{
+			var productToPatch = await context.Products.FindAsync(id);
+
+			productToPatch.Name = string.IsNullOrEmpty(product.Name)
+				? productToPatch.Name : product.Name;
+			productToPatch.Description = string.IsNullOrEmpty(product.Description)
+				? productToPatch.Description : product.Description;
+
+			await context.SaveChangesAsync();
 		}
 	}
 }
