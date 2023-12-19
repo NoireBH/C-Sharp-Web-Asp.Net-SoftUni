@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using ProductsApi.Data;
 using ProductsApi.Services.Data;
 using ProductsApi.Services.Data.Interfaces;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,20 @@ builder.Services.AddDbContext<ProductsApiDbContext>(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+	c.SwaggerDoc("v1",
+			new OpenApiInfo
+			{
+				Title = "My API - V1",
+				Version = "v1"
+			}
+		 );
+	string filePath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+	c.IncludeXmlComments(filePath);
+});
+
 builder.Services.AddMvc(options =>
 {
 	options.SuppressAsyncSuffixInActionNames = false;

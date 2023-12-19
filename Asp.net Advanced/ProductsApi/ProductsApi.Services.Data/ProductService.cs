@@ -64,5 +64,15 @@ namespace ProductsApi.Services.Data
 
 			await context.SaveChangesAsync();
 		}
+
+		public async Task<Product?> DeleteProduct(int id)
+		{
+			Product? product = await context.Products.FindAsync(id);
+
+			context.Products.Remove(product!);
+			await context.SaveChangesAsync();
+
+			return product;
+		}
 	}
 }

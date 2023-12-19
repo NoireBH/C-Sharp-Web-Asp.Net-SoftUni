@@ -18,5 +18,7 @@ namespace ProductsApi.Services.Data.Interfaces
 		Task EditProduct(int id, Product product);
 
 		Task EditProductPartially(int id, Product product);
+
+		Task<Product?> DeleteProduct(int id);
 	}
 }
