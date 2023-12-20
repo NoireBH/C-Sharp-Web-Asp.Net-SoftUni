@@ -19,6 +19,17 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplicationServices(typeof(IHouseService));
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy(name: "HouseRenting", builder =>
+	{
+		builder
+		.WithOrigins("https://localhost:7107")
+		.AllowAnyHeader()
+		.AllowAnyMethod();
+	});
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -33,5 +44,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("HouseRenting");
 
 app.Run();
