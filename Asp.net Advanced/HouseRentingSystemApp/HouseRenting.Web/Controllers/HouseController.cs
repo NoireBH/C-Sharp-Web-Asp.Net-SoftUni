@@ -58,7 +58,7 @@ namespace HouseRenting.Web.Controllers
 				return RedirectToAction(nameof(AgentController.Become), "Agent");
 			}
 
-			bool houseCategoryExists = await houseService.CategoryExists(model.CategoryId);
+			bool houseCategoryExists = await houseService.CategoryExistsAsync(model.CategoryId);
 
 			if (!houseCategoryExists)
 			{
@@ -78,7 +78,7 @@ namespace HouseRenting.Web.Controllers
 			{
 				string? agentId = await agentService.GetAgentIdByUserIdAsync(User.GetId()!);
 
-				await houseService.Create(model.Title, model.Address, model.Description, model.ImageUrl, model.PricePerMonth, model.CategoryId, agentId);
+				await houseService.CreateAsync(model.Title, model.Address, model.Description, model.ImageUrl, model.PricePerMonth, model.CategoryId, agentId);
 			}
 			catch (Exception)
 			{
@@ -105,11 +105,11 @@ namespace HouseRenting.Web.Controllers
 				{
 					var agentId = await agentService.GetAgentIdByUserIdAsync(userId);
 
-					myHouses = await houseService.GetAllAgentHousesById(agentId);
+					myHouses = await houseService.GetAllAgentHousesByIdAsync(agentId);
 				}
 				else
 				{
-					myHouses = await houseService.GetAllUserHousesById(userId);
+					myHouses = await houseService.GetAllUserHousesByIdAsync(userId);
 				}
 			}
 			catch (Exception)
@@ -126,33 +126,33 @@ namespace HouseRenting.Web.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Details(string id)
 		{
-			bool houseExists = await houseService.ExistsById(id);
+			bool houseExists = await houseService.ExistsByIdAsync(id);
 
 			if (!houseExists)
 			{
 				return BadRequest();
 			}
 
-			var house = await houseService.GetHouseDetailsById(id);
+			var house = await houseService.GetHouseDetailsByIdAsync(id);
 
 			return View(house);
 		}
 
 		public async Task<IActionResult> Edit(string id)
 		{
-			if (!await houseService.ExistsById(id))
+			if (!await houseService.ExistsByIdAsync(id))
 			{
 				return BadRequest();
 			}
 
-			if (!await agentService.HasHouseById(id, User.GetId()!))
+			if (!await agentService.HasHouseByIdAsync(id, User.GetId()!))
 			{
 				TempData[ErrorMessage] = "You must be the owner of this house to be able to edit!";
 				return RedirectToAction("Mine", "House");
 			}
 
-			var house = await houseService.GetHouseDetailsById(id);
-			int houseCategoryId = await houseService.GetCategoryId(id);
+			var house = await houseService.GetHouseDetailsByIdAsync(id);
+			int houseCategoryId = await houseService.GetCategoryIdAsync(id);
 
 			var houseModel = new AddOrEditHouseFormModel()
 			{
@@ -184,7 +184,7 @@ namespace HouseRenting.Web.Controllers
 				return RedirectToAction(nameof(AgentController.Become), "Agent");
 			}
 
-			bool houseCategoryExists = await houseService.CategoryExists(model.CategoryId);
+			bool houseCategoryExists = await houseService.CategoryExistsAsync(model.CategoryId);
 
 			if (!houseCategoryExists)
 			{
@@ -202,7 +202,7 @@ namespace HouseRenting.Web.Controllers
 			//should always use try-catch incase of Database errors or incase the db goes offline!
 			try
 			{
-				await houseService.EditHouse(model, id);
+				await houseService.EditHouseAsync(model, id);
 			}
 			catch (Exception)
 			{
@@ -220,19 +220,19 @@ namespace HouseRenting.Web.Controllers
 		{
 			try
 			{
-				if (!await houseService.ExistsById(id))
+				if (!await houseService.ExistsByIdAsync(id))
 				{
 					TempData[ErrorMessage] = "A house with that id does not exist!";
 					return RedirectToAction("All", "House");
 				}
 
-				if (!await agentService.HasHouseById(id, User.GetId()!))
+				if (!await agentService.HasHouseByIdAsync(id, User.GetId()!))
 				{
 					TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
 					return RedirectToAction("Mine", "House");
 				}
 
-				var house = await houseService.GetHouseDetailsById(id);
+				var house = await houseService.GetHouseDetailsByIdAsync(id);
 
 				var houseModel = new DeleteHouseViewModel()
 				{
@@ -258,19 +258,19 @@ namespace HouseRenting.Web.Controllers
 		{
 			try
 			{
-				if (!await houseService.ExistsById(model.Id))
+				if (!await houseService.ExistsByIdAsync(model.Id))
 				{
 					TempData[ErrorMessage] = "A house with that id does not exist!";
 					return RedirectToAction("All", "House");
 				}
 
-				if (!await agentService.HasHouseById(model.Id, User.GetId()!))
+				if (!await agentService.HasHouseByIdAsync(model.Id, User.GetId()!))
 				{
 					TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
 					return RedirectToAction("All", "House");
 				}
 
-				await houseService.Delete(model.Id);
+				await houseService.DeleteAsync(model.Id);
 			}
 			catch (Exception)
 			{
@@ -285,7 +285,7 @@ namespace HouseRenting.Web.Controllers
 		{
 			try
 			{
-				if (!await houseService.ExistsById(id))
+				if (!await houseService.ExistsByIdAsync(id))
 				{
 					TempData[ErrorMessage] = "A house with that id does not exist!";
 					return RedirectToAction("All", "House");
@@ -297,13 +297,13 @@ namespace HouseRenting.Web.Controllers
 					return RedirectToAction(nameof(AgentController.Become), "Agent");
 				}
 
-				if (await houseService.IsRented(id))
+				if (await houseService.IsRentedAsync(id))
 				{
 					TempData[ErrorMessage] = "The house is already rented!";
 					return RedirectToAction("All", "House");
 				}
 
-				await houseService.Rent(id, User.GetId()!);
+				await houseService.RentAsync(id, User.GetId()!);
 			}
 			catch (Exception)
 			{
@@ -319,19 +319,19 @@ namespace HouseRenting.Web.Controllers
 		{
 			try
 			{
-				if (!await houseService.ExistsById(id))
+				if (!await houseService.ExistsByIdAsync(id))
 				{
 					TempData[ErrorMessage] = "A house with that id does not exist!";
 					return RedirectToAction("All", "House");
 				}
 
-				if (!await houseService.IsRentedByCurrentUser(id, User.GetId()!))
+				if (!await houseService.IsRentedByCurrentUserAsync(id, User.GetId()!))
 				{
 					TempData[ErrorMessage] = "You need to be the renter of this house in order to leave it!";
 					return RedirectToAction("All", "House");
 				}
 
-				await houseService.Leave(id);
+				await houseService.LeaveAsync(id);
 			}
 			catch (Exception)
 			{

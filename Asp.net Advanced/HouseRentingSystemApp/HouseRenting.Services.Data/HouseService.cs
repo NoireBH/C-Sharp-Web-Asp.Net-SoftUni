@@ -1,6 +1,7 @@
 ﻿using HouseRenting.Data.Models;
 using HouseRenting.Services.Data.Interfaces;
 using HouseRenting.Services.Data.Models.House;
+using HouseRenting.Services.Data.Models.Statistics;
 using HouseRenting.Web.Data;
 using HouseRenting.Web.ViewModels.Agent;
 using HouseRenting.Web.ViewModels.Category;
@@ -84,12 +85,12 @@ namespace HouseRenting.Services.Data
 			};
 		}
 
-		public async Task<bool> CategoryExists(int categoryId)
+		public async Task<bool> CategoryExistsAsync(int categoryId)
 		{
 			return await dbContext.Categories.AnyAsync(c => c.Id == categoryId);
 		}
 
-		public async Task Create(string title, string address, string description, string imageUrl, decimal price, int categoryId, string agentId)
+		public async Task CreateAsync(string title, string address, string description, string imageUrl, decimal price, int categoryId, string agentId)
 		{
 			House house = new House()
 			{
@@ -106,7 +107,7 @@ namespace HouseRenting.Services.Data
 			await dbContext.SaveChangesAsync();
 		}
 
-		public async Task EditHouse(AddOrEditHouseFormModel model, string houseId)
+		public async Task EditHouseAsync(AddOrEditHouseFormModel model, string houseId)
 		{
 			House? house = await dbContext.Houses.FirstAsync(h => h.Id.ToString() == houseId);
 
@@ -120,12 +121,12 @@ namespace HouseRenting.Services.Data
 			await dbContext.SaveChangesAsync();
 		}
 
-		public async Task<bool> ExistsById(string houseId)
+		public async Task<bool> ExistsByIdAsync(string houseId)
 		{
 			return await dbContext.Houses.AnyAsync(h => h.Id.ToString() == houseId);
 		}
 
-		public async Task<IEnumerable<HouseAllViewModel>> GetAllAgentHousesById(string agentId)
+		public async Task<IEnumerable<HouseAllViewModel>> GetAllAgentHousesByIdAsync(string agentId)
 		{
 			var houses = await dbContext.Houses
 				.Where(h => h.AgentId.ToString() == agentId)
@@ -162,7 +163,7 @@ namespace HouseRenting.Services.Data
 			return categories;
 		}
 
-		public async Task<IEnumerable<HouseAllViewModel>> GetAllUserHousesById(string userId)
+		public async Task<IEnumerable<HouseAllViewModel>> GetAllUserHousesByIdAsync(string userId)
 		{
 			var houses = await dbContext.Houses
 				.Where(h => h.RenterId.ToString() == userId)
@@ -180,7 +181,7 @@ namespace HouseRenting.Services.Data
 			return houses;
 		}
 
-		public async Task<HouseDetailsViewModel> GetHouseDetailsById(string houseId)
+		public async Task<HouseDetailsViewModel> GetHouseDetailsByIdAsync(string houseId)
 		{
 			var house = await dbContext.Houses
 				.Where(h => h.Id.ToString() ==  houseId)
@@ -222,7 +223,7 @@ namespace HouseRenting.Services.Data
 			return lastThreeHouses;
 		}
 
-		public async Task<int> GetCategoryId(string houseId)
+		public async Task<int> GetCategoryIdAsync(string houseId)
 		{
 			int categoryId = await dbContext.Houses
 				.Where( h => h.Id.ToString() == houseId )
@@ -232,7 +233,7 @@ namespace HouseRenting.Services.Data
 			return categoryId;
 		}
 
-		public async Task Delete(string houseId)
+		public async Task DeleteAsync(string houseId)
 		{
 			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == houseId);
 
@@ -241,14 +242,14 @@ namespace HouseRenting.Services.Data
 
 		}
 
-		public async Task<bool> IsRented(string id)
+		public async Task<bool> IsRentedAsync(string id)
 		{
 			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == id);
 			var result = house!.RenterId != null;
 			return result;
 		}
 
-		public async Task<bool> IsRentedByCurrentUser(string houseId, string userId)
+		public async Task<bool> IsRentedByCurrentUserAsync(string houseId, string userId)
 		{
 			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == houseId);
 
@@ -260,19 +261,33 @@ namespace HouseRenting.Services.Data
 			return true;
 		}
 
-		public async Task Rent(string houseId, string userId)
+		public async Task RentAsync(string houseId, string userId)
 		{
 			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == houseId);
 			house!.RenterId = Guid.Parse(userId);
 			await dbContext.SaveChangesAsync();
 		}
 
-		public async Task Leave(string houseId)
+		public async Task LeaveAsync(string houseId)
 		{
 			var house = await dbContext.Houses.FirstOrDefaultAsync(h => h.Id.ToString() == (houseId));
 			house!.RenterId = null;
 
 			await dbContext.SaveChangesAsync();
+		}
+
+		public async Task<StatisticServiceModel> GetStatisticsAsync()
+		{
+			int totalHouses = await dbContext.Houses.CountAsync();
+			int totalRents = await dbContext.Houses
+				.Where(h => h.RenterId != null)
+				.CountAsync();
+
+			return new StatisticServiceModel()
+			{
+				TotalHouses = totalHouses,
+				TotalRents = totalRents
+			};
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using HouseRenting.Services.Data.Models.House;
+using HouseRenting.Services.Data.Models.Statistics;
 using HouseRenting.Web.ViewModels.Category;
 using HouseRenting.Web.ViewModels.Home;
 using HouseRenting.Web.ViewModels.House;
@@ -16,35 +17,37 @@ namespace HouseRenting.Services.Data.Interfaces
 
 		Task<IEnumerable<HouseCategoryFormModel>> GetAllHouseCategoriesAsync();
 
-		Task<bool> CategoryExists(int categoryId);
+		Task<bool> CategoryExistsAsync(int categoryId);
 
-		Task Create(string title, string address, string description,
+		Task CreateAsync(string title, string address, string description,
 			 string imageUrl, decimal price, int categoryId, string agentId);
 
 		Task<AllHousesFilteredServiceModel> AllAsync(AllHousesQueryModel model);
 
 		Task<IEnumerable<string>> GetAllCategoryNamesAsync();
 
-		Task<IEnumerable<HouseAllViewModel>> GetAllAgentHousesById(string agentId);
+		Task<IEnumerable<HouseAllViewModel>> GetAllAgentHousesByIdAsync(string agentId);
 
-		Task<IEnumerable<HouseAllViewModel>> GetAllUserHousesById(string userId);
+		Task<IEnumerable<HouseAllViewModel>> GetAllUserHousesByIdAsync(string userId);
 
-		Task<bool> ExistsById(string houseId);
+		Task<bool> ExistsByIdAsync(string houseId);
 
-		Task<HouseDetailsViewModel> GetHouseDetailsById(string houseId);
+		Task<HouseDetailsViewModel> GetHouseDetailsByIdAsync(string houseId);
 
-		Task EditHouse(AddOrEditHouseFormModel model, string houseId);
+		Task EditHouseAsync(AddOrEditHouseFormModel model, string houseId);
 
-		Task<int> GetCategoryId(string houseId);
+		Task<int> GetCategoryIdAsync(string houseId);
 
-		Task Delete(string houseId);
+		Task DeleteAsync(string houseId);
 
-		Task<bool> IsRented(string id);
+		Task<bool> IsRentedAsync(string id);
 
-		Task<bool> IsRentedByCurrentUser(string houseId, string userId);
+		Task<bool> IsRentedByCurrentUserAsync(string houseId, string userId);
 
-		Task Rent(string houseId, string userId);
+		Task RentAsync(string houseId, string userId);
 
-		Task Leave(string houseId);
+		Task LeaveAsync(string houseId);
+
+		Task<StatisticServiceModel> GetStatisticsAsync();
 	}
 }
