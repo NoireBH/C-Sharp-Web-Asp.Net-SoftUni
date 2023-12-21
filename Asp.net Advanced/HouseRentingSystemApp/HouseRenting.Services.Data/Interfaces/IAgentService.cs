@@ -19,5 +19,6 @@ namespace HouseRenting.Services.Data.Interfaces
 
 		Task<string?> GetAgentIdByUserIdAsync(string userId);
 		Task<bool> HasHouseByIdAsync(string houseId, string currentUserId);
+
 	}
 }

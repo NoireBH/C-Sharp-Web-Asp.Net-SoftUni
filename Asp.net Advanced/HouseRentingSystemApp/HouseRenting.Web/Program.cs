@@ -4,6 +4,7 @@ using HouseRenting.Services.Data.Interfaces;
 using HouseRenting.Web.Data;
 using HouseRenting.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddMvc((options) =>
 {
 	options.ModelBinderProviders.Insert(0, new CustomBinderProvider());
+	options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
 });
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>

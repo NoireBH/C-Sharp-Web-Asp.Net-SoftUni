@@ -228,7 +228,7 @@ namespace HouseRenting.Web.Controllers
 
 				if (!await agentService.HasHouseByIdAsync(id, User.GetId()!))
 				{
-					TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
+					TempData[ErrorMessage] = "You must be the owner of this house to delete it!";
 					return RedirectToAction("Mine", "House");
 				}
 
@@ -300,6 +300,12 @@ namespace HouseRenting.Web.Controllers
 				if (await houseService.IsRentedAsync(id))
 				{
 					TempData[ErrorMessage] = "The house is already rented!";
+					return RedirectToAction("All", "House");
+				}
+
+				if (await agentService.HasHouseByIdAsync(id, User.GetId()))
+				{
+					TempData[ErrorMessage] = "You can't rent you own house!";
 					return RedirectToAction("All", "House");
 				}
 
