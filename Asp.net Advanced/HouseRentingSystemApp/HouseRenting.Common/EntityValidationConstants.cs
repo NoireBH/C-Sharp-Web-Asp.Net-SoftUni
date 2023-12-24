@@ -47,6 +47,7 @@ namespace HouseRenting.Common
 
             public const int LastNameMinLength = 1;
             public const int LastNameMaxLength = 20;
+
         }
     }
 }

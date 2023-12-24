@@ -1,7 +1,10 @@
 ﻿@model HouseDetailsViewModel
 @inject IAgentService agentService
+@inject IHouseService houseService
 @{
 	bool isOwner = await agentService.HasHouseByIdAsync(Model.Id, User.GetId());
+	bool isAgent = await agentService.ExistsByIdAsync(User.GetId());
+	bool isRenterOfHouse = await houseService.IsRentedByCurrentUserAsync(Model.Id, User.GetId());
 }
 
 @{
@@ -26,7 +29,7 @@
 				<img class="card-img-top" style="width: 100%;height:23rem;"
 					 src="@Model.ImageUrl" alt="House Image">
 			</div>
-		}		
+		}
 		<div class="card col-8 border-0">
 			<h3 style="font-size:25px;"><u>@Model.Title</u></h3>
 			<p>Located in: <b>@Model.Address</b></p>
@@ -50,15 +53,15 @@
 						<a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
 						   asp-route-id="@Model.Id">Delete</a>
 					}
-					
-					@if (!Model.IsRented && !isOwner)
+
+					@if (!Model.IsRented && isAgent && !isOwner)
 					{
-						<form class="ml-2" asp-controller="House" asp-action="Rent" 
-						asp-route-id="@Model.Id" method="post">
+						<form class="ml-2" asp-controller="House" asp-action="Rent"
+							  asp-route-id="@Model.Id" method="post">
 							<input class="btn btn-primary" type="submit" value="Rent" />
 						</form>
 					}
-					else if (Model.IsRented && !isOwner)
+					else if (isRenterOfHouse && !isOwner)
 					{
 						<form class="ml-2" asp-controller="House" asp-action="Leave"
 							  asp-route-id="@Model.Id" method="post">
