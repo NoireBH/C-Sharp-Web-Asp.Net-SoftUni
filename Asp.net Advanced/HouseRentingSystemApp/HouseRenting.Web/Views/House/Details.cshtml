@@ -46,7 +46,7 @@
 			<form class="mb-2">
 				@if (this.User.Identity.IsAuthenticated)
 				{
-					@if (isOwner)
+					@if (isOwner || User.IsAdmin())
 					{
 						<a class="btn btn-warning" asp-controller="House" asp-action="Edit"
 						   asp-route-id="@Model.Id">Edit</a>
@@ -54,7 +54,8 @@
 						   asp-route-id="@Model.Id">Delete</a>
 					}
 
-					@if (!Model.IsRented && isAgent && !isOwner)
+					@if (!Model.IsRented && isAgent && !isOwner ||
+							!Model.IsRented && User.IsAdmin() && !isOwner)
 					{
 						<form class="ml-2" asp-controller="House" asp-action="Rent"
 							  asp-route-id="@Model.Id" method="post">

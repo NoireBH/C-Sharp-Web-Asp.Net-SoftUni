@@ -145,7 +145,7 @@ namespace HouseRenting.Web.Controllers
 				return BadRequest();
 			}
 
-			if (!await agentService.HasHouseByIdAsync(id, User.GetId()!))
+			if (!await agentService.HasHouseByIdAsync(id, User.GetId()!) && !User.IsAdmin())
 			{
 				TempData[ErrorMessage] = "You must be the owner of this house to be able to edit!";
 				return RedirectToAction("Mine", "House");
@@ -179,9 +179,19 @@ namespace HouseRenting.Web.Controllers
 
 			bool isAgent = await agentService.ExistsByIdAsync(User.GetId()!);
 
-			if (!isAgent)
+			if (!isAgent && !User.IsAdmin())
 			{
+				TempData[ErrorMessage] = "You must be an agent and the owner of this house to be able to edit!";
 				return RedirectToAction(nameof(AgentController.Become), "Agent");
+			}
+
+			string? agentId = await agentService.GetAgentIdByUserIdAsync(User.GetId()!);
+			bool isAgentOwner = await houseService.IsRentedByCurrentUserAsync(id, agentId!);
+
+			if (!isAgentOwner && !User.IsAdmin())
+			{
+				TempData[ErrorMessage] = "You must be the owner of this house to be able to edit!";
+				return RedirectToAction(nameof(HouseController.Mine), "House");
 			}
 
 			bool houseCategoryExists = await houseService.CategoryExistsAsync(model.CategoryId);
@@ -226,7 +236,7 @@ namespace HouseRenting.Web.Controllers
 					return RedirectToAction("All", "House");
 				}
 
-				if (!await agentService.HasHouseByIdAsync(id, User.GetId()!))
+				if (!await agentService.HasHouseByIdAsync(id, User.GetId()!) && !User.IsAdmin())
 				{
 					TempData[ErrorMessage] = "You must be the owner of this house to delete it!";
 					return RedirectToAction("Mine", "House");
@@ -264,7 +274,7 @@ namespace HouseRenting.Web.Controllers
 					return RedirectToAction("All", "House");
 				}
 
-				if (!await agentService.HasHouseByIdAsync(model.Id, User.GetId()!))
+				if (!await agentService.HasHouseByIdAsync(model.Id, User.GetId()!) && !User.IsAdmin())
 				{
 					TempData[ErrorMessage] = "You must be the agent of this house to delete it!";
 					return RedirectToAction("All", "House");
@@ -291,7 +301,7 @@ namespace HouseRenting.Web.Controllers
 					return RedirectToAction("All", "House");
 				}
 
-				if (!await agentService.ExistsByIdAsync(User.GetId()!))
+				if (!await agentService.ExistsByIdAsync(User.GetId()!) && !User.IsAdmin())
 				{
 					TempData[ErrorMessage] = "You have to be an agent in order to add a new house!";
 					return RedirectToAction(nameof(AgentController.Become), "Agent");

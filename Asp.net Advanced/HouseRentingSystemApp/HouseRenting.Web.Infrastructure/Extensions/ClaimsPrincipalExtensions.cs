@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static HouseRenting.Common.GeneralConstants.AdminUser;
 
 namespace HouseRenting.Web.Infrastructure.Extensions
 {
@@ -12,6 +13,11 @@ namespace HouseRenting.Web.Infrastructure.Extensions
 		public static string? GetId(this ClaimsPrincipal user)
 		{
 			return user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		}
+
+		public static bool IsAdmin(this ClaimsPrincipal user)
+		{
+			return user.IsInRole(AdminRoleName);
 		}
 	}
 }

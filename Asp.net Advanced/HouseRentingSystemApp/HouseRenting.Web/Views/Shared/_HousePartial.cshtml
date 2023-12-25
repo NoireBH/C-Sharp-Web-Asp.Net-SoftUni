@@ -24,7 +24,7 @@
 			   class="btn btn-success">Details</a>
 			@if (this.User.Identity.IsAuthenticated)
 			{
-				@if (isOwner)
+				@if (isOwner || User.IsAdmin())
 				{
 					<a asp-controller="House" asp-action="Edit" asp-route-id="@Model.Id"
 					   class="btn btn-warning">Edit</a>
@@ -34,19 +34,26 @@
 
 				<p></p>
 
-				@if (!Model.IsRented && isAgent && !isOwner)
+				@if (!Model.IsRented)
 				{
-					<form class="input-group-sm" asp-controller="House" asp-action="Rent"
-						  asp-route-id="@Model.Id" method="post">
-						<input class="btn btn-primary" type="submit" value="Rent" />
-					</form>
+					@if (isAgent && !isOwner || User.IsAdmin() && !isOwner)
+					{
+						<form class="input-group-sm" asp-controller="House" asp-action="Rent"
+							  asp-route-id="@Model.Id" method="post">
+							<input class="btn btn-primary" type="submit" value="Rent" />
+						</form>
+					}
 				}
-				else if (isRenterOfHouse && !isOwner)
+				else
 				{
-					<form asp-controller="House" asp-action="Leave"
-						  asp-route-id="@Model.Id" method="post">
-						<input class="btn btn-primary" type="submit" value="Leave" />
-					</form>
+					@if (isRenterOfHouse && !isOwner || 
+					User.IsAdmin() && isRenterOfHouse && !isOwner)
+					{
+						<form asp-controller="House" asp-action="Leave"
+							  asp-route-id="@Model.Id" method="post">
+							<input class="btn btn-primary" type="submit" value="Leave" />
+						</form>
+					}
 				}
 			}
 		</div>
