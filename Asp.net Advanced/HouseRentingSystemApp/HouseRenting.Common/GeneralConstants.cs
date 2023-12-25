@@ -10,5 +10,11 @@ namespace HouseRenting.Common
 	{
 		public const int DefaultPage = 1;
 		public const int DefaultHousesPerPage = 3;
+
+		public class AdminUser
+		{
+			public const string AdminRoleName = "Administrator";
+			public const string AdminEmail = "admin@houserenting.bg";
+		}
 	}
 }

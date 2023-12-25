@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using HouseRenting.Data.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using static HouseRenting.Common.GeneralConstants.AdminUser;
 
 namespace HouseRenting.Web.Infrastructure.Extensions
 {
@@ -32,6 +36,34 @@ namespace HouseRenting.Web.Infrastructure.Extensions
 
 				services.AddScoped(interfaceType, service);
 			}
+		}
+
+		public static IApplicationBuilder SeedAdministrator(this IApplicationBuilder app, string email)
+		{
+			using IServiceScope scopedServices = app.ApplicationServices.CreateScope();
+			IServiceProvider serviceProvider = scopedServices.ServiceProvider;
+
+			var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+			var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+			Task
+				.Run(async () =>
+				{
+					if (await roleManager.RoleExistsAsync(AdminRoleName))
+					{
+						return;
+					}
+
+					var role = new IdentityRole<Guid>(AdminRoleName);
+					await roleManager.CreateAsync(role);
+
+					var adminUser = await userManager.FindByEmailAsync(email);
+					await userManager.AddToRoleAsync(adminUser, AdminRoleName);
+				})
+				.GetAwaiter()
+				.GetResult();
+
+			return app;
 		}
 	}
 }

@@ -6,6 +6,7 @@ using HouseRenting.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static HouseRenting.Common.GeneralConstants.AdminUser;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.SeedAdministrator(AdminEmail);
 
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
