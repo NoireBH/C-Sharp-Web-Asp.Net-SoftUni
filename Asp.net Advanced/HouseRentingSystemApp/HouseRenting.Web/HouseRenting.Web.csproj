@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.20" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.23" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.23" />
@@ -29,6 +30,7 @@
     <ProjectReference Include="..\HouseRenting.Data\HouseRenting.Data.csproj" />
     <ProjectReference Include="..\HouseRenting.Services.Data.Models\HouseRenting.Services.Data.Models.csproj" />
     <ProjectReference Include="..\HouseRenting.Services.Data\HouseRenting.Services.Data.csproj" />
+    <ProjectReference Include="..\HouseRenting.Services.Mapping\HouseRenting.Services.Mapping.csproj" />
     <ProjectReference Include="..\HouseRenting.Web.Infrastructure\HouseRenting.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\HouseRenting.Web.ViewModels\HouseRenting.Web.ViewModels.csproj" />
   </ItemGroup>

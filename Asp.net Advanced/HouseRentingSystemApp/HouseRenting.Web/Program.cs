@@ -1,11 +1,14 @@
 using HouseRenting.Common.ModelBinders;
 using HouseRenting.Data.Models;
 using HouseRenting.Services.Data.Interfaces;
+using HouseRenting.Services.Mapping;
 using HouseRenting.Web.Data;
 using HouseRenting.Web.Infrastructure.Extensions;
+using HouseRenting.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using static HouseRenting.Common.GeneralConstants.AdminUser;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -44,6 +47,8 @@ builder.Services.AddApplicationServices(typeof(IHouseService));
 builder.Services.AddControllersWithViews();
 
 WebApplication app = builder.Build();
+
+AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
 
 if (app.Environment.IsDevelopment())

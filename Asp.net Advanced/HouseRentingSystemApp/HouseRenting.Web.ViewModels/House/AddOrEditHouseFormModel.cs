@@ -1,6 +1,8 @@
-﻿using HouseRenting.Web.ViewModels.Category;
+﻿using HouseRenting.Services.Mapping;
+using HouseRenting.Web.ViewModels.Category;
 using System.ComponentModel.DataAnnotations;
 using static HouseRenting.Common.EntityValidationConstants.House;
+
 
 namespace HouseRenting.Web.ViewModels.House
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HouseRenting.Services.Mapping;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace HouseRenting.Web.ViewModels.House
 {
-    public class HouseAllViewModel
-    {
+	using AutoMapper;
+	using Data.Models;
+	public class HouseAllViewModel : IMapFrom<House>, IHaveCustomMappings
+	{
         public string Id { get; set; } = null!;
 
         public string Title { get; set; } = null!;
@@ -23,5 +26,12 @@ namespace HouseRenting.Web.ViewModels.House
 
         [DisplayName("Is Rented")]
         public bool IsRented { get; set; }
-    }
+
+		public void CreateMappings(IProfileExpression configuration)
+		{
+			configuration.CreateMap<House, HouseAllViewModel>()
+				.ForMember(h => h.IsRented, cfg => cfg
+					.MapFrom(h => h.Renter != null));
+		}
+	}
 }

@@ -1,7 +1,9 @@
-﻿using HouseRenting.Data.Models;
+﻿using AutoMapper;
+using HouseRenting.Data.Models;
 using HouseRenting.Services.Data.Interfaces;
 using HouseRenting.Services.Data.Models.House;
 using HouseRenting.Services.Data.Models.Statistics;
+using HouseRenting.Services.Mapping;
 using HouseRenting.Web.Data;
 using HouseRenting.Web.ViewModels.Agent;
 using HouseRenting.Web.ViewModels.Category;
@@ -65,15 +67,7 @@ namespace HouseRenting.Services.Data
 			var houses = await housesQuery
 				.Skip((model.CurrentPage - 1) * model.HousesPerPage)
 				.Take(model.HousesPerPage)
-				.Select(h => new HouseAllViewModel
-				{
-					Id = h.Id.ToString(),
-					Title = h.Title,
-					Address = h.Address,
-					ImageUrl = h.ImageUrl,
-					IsRented = h.RenterId.HasValue,
-					PricePerMonth = h.PricePerMonth
-				})
+				.To<HouseAllViewModel>()
 				.ToArrayAsync();
 
 			int totalHouses = housesQuery.Count();
@@ -212,12 +206,7 @@ namespace HouseRenting.Services.Data
 				.Where(h => h.IsActive)
 				.OrderByDescending(h => h.CreatedOn)
 				.Take(3)
-				.Select(h => new IndexViewModel
-				{
-					Id = h.Id.ToString(),
-					Title = h.Title,
-					ImageUrl = h.ImageUrl
-				})
+				.To<IndexViewModel>()
 				.ToArrayAsync();
 
 			return lastThreeHouses;
@@ -289,5 +278,7 @@ namespace HouseRenting.Services.Data
 				TotalRents = totalRents
 			};
 		}
+
+		
 	}
 }
