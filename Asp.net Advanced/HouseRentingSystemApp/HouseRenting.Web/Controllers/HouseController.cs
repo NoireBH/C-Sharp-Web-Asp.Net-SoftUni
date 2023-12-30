@@ -93,6 +93,11 @@ namespace HouseRenting.Web.Controllers
 
 		public async Task<IActionResult> Mine()
 		{
+			if (User.IsAdmin())
+			{
+				return RedirectToAction("Mine", "House", new { Area = "Admin" });
+			}
+
 			IEnumerable<HouseAllViewModel> myHouses = null;
 
 			string? userId = User.GetId();
