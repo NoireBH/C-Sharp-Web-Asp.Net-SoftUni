@@ -15,6 +15,7 @@ namespace HouseRenting.Common
 		{
 			public const string AdminRoleName = "Administrator";
 			public const string AdminEmail = "admin@houserenting.bg";
+			public const string AdminAreaName = "Admin";
 		}
 	}
 }

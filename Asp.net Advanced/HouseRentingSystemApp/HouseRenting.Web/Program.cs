@@ -8,6 +8,7 @@ using HouseRenting.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.Reflection;
 using static HouseRenting.Common.GeneralConstants.AdminUser;
 
@@ -73,7 +74,17 @@ app.UseAuthorization();
 
 app.SeedAdministrator(AdminEmail);
 
-app.MapDefaultControllerRoute();
-app.MapRazorPages();
+app.UseEndpoints(ep =>
+{
+	ep.MapControllerRoute(
+	name: "Areas",
+	pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+	ep.MapDefaultControllerRoute();
+	ep.MapRazorPages();
+
+});
+
+
 
 app.Run();
