@@ -72,6 +72,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.EnableOnlineUsersChecker();
+
 app.SeedAdministrator(AdminEmail);
 
 app.UseEndpoints(ep =>

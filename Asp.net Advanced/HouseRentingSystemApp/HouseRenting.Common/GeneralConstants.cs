@@ -17,5 +17,8 @@ namespace HouseRenting.Common
 			public const string AdminEmail = "admin@houserenting.bg";
 			public const string AdminAreaName = "Admin";
 		}
+
+		public const string OnlineUsersCookieName = "OnineUsers";
+		public const int lastActivityBeforeGoingOfflineInMinutes = 10;
 	}
 }

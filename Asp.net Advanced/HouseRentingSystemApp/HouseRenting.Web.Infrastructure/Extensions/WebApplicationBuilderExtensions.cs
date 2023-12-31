@@ -1,4 +1,5 @@
 ﻿using HouseRenting.Data.Models;
+using HouseRenting.Web.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,6 +65,11 @@ namespace HouseRenting.Web.Infrastructure.Extensions
 				.GetResult();
 
 			return app;
+		}
+
+		public static IApplicationBuilder EnableOnlineUsersChecker(this IApplicationBuilder app)
+		{
+			return app.UseMiddleware<OnlineUsersMiddleware>();
 		}
 	}
 }

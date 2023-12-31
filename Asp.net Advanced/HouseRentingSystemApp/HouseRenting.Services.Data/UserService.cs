@@ -20,14 +20,33 @@ namespace HouseRenting.Services.Data
             this.context = context;
         }
 
-        public Task<IEnumerable<UserViewModel>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserViewModel>> GetAllUsersAsync()
 		{
-			var allUsers = new List<UserViewModel>();
+			List<UserViewModel> allUsers = await this.context
+				.Users
+				.Select(u => new UserViewModel()
+				{
+					Id = u.Id.ToString(),
+					Email = u.Email,
+					FullName = u.FirstName + " " + u.LastName
+				})
+				.ToListAsync();
+			foreach (UserViewModel user in allUsers)
+			{
+				var agent = this.context
+					.Agents
+					.FirstOrDefault(a => a.UserId.ToString() == user.Id);
+				if (agent != null)
+				{
+					user.PhoneNumber = agent.PhoneNumber;
+				}
+				else
+				{
+					user.PhoneNumber = string.Empty;
+				}
+			}
 
-			var agents = context.Agents
-				.Include(a => a.User)
-				.To<UserViewModel>()
-				.ToArrayAsync();
+			return allUsers;
 		}
 
 		public async Task<string> GetUserFullNameByIdAsync(string userId)
