@@ -32,7 +32,9 @@ namespace HouseRenting.Web.ViewModels.Rent
 				.ForMember(d => d.RenterEmail, opt => opt
 					.MapFrom(s => s.Renter!.Email))
 				.ForMember(d => d.HouseImageUrl, opt => opt
-					.MapFrom(s => s.ImageUrl));
+					.MapFrom(s => s.ImageUrl))
+				.ForMember(d => d.HouseTitle, opt => opt
+					.MapFrom(s => s.Title));
 		}
 	}
 }
