@@ -43,7 +43,7 @@ namespace HouseRenting.Web.Infrastructure.Middlewares
 				{
 					if (!Keys.TryAdd(userId, true))
 					{
-						cacheEntry.AbsoluteExpiration = DateTime.MinValue;
+						cacheEntry.AbsoluteExpiration = DateTimeOffset.MinValue;
 					}
 					else
 					{

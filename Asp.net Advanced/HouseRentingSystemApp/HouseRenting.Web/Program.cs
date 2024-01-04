@@ -45,6 +45,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 
 builder.Services.AddApplicationServices(typeof(IHouseService));
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddControllersWithViews();
 
 WebApplication app = builder.Build();

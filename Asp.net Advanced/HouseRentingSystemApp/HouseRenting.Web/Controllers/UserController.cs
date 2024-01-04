@@ -2,23 +2,25 @@
 using HouseRenting.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace HouseRenting.Web.Controllers
 {
+	using static Common.GeneralConstants;
 	public class UserController : Controller
 	{
 		private readonly SignInManager<ApplicationUser> signInManager;
 		private readonly UserManager<ApplicationUser> userManager;
-		private readonly IUserStore<ApplicationUser> userStore;
+		private readonly IMemoryCache cache;
 
 		public UserController(
 			UserManager<ApplicationUser> userManager,
-			IUserStore<ApplicationUser> userStore,
-			SignInManager<ApplicationUser> signInManager)
+			SignInManager<ApplicationUser> signInManager,
+			IMemoryCache cache)
 		{
 			this.userManager = userManager;
-			this.userStore = userStore;
 			this.signInManager = signInManager;
+			this.cache = cache;
 		}
 
 		public IActionResult Register()
@@ -58,6 +60,7 @@ namespace HouseRenting.Web.Controllers
 			}
 
 			await signInManager.SignInAsync(user, isPersistent: false);
+			cache.Remove(UsersCacheKey);
 			return RedirectToAction("Index", "Home");
 		}
 	}

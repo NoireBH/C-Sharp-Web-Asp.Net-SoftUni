@@ -18,7 +18,12 @@ namespace HouseRenting.Common
 			public const string AdminAreaName = "Admin";
 		}
 
-		public const string OnlineUsersCookieName = "OnineUsers";
+		public const string OnlineUsersCookieName = "OnlineUsers";
 		public const int lastActivityBeforeGoingOfflineInMinutes = 10;
+
+		public const string UsersCacheKey = "UsersCacheKey";
+		public const string RentsCacheKey = "RentsCacheKey";
+
+
 	}
 }
