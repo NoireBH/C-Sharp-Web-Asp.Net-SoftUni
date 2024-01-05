@@ -4,7 +4,9 @@ using HouseRenting.Web.Infrastructure.Extensions;
 using HouseRenting.Web.ViewModels.House;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using static HouseRenting.Common.NotificationMessagesConstants;
+using static  HouseRenting.Common.GeneralConstants;
 
 namespace HouseRenting.Web.Controllers
 {
@@ -13,11 +15,16 @@ namespace HouseRenting.Web.Controllers
 	{
 		private readonly IHouseService houseService;
 		private readonly IAgentService agentService;
+		private readonly IMemoryCache cache;
 
-		public HouseController(IHouseService houseService, IAgentService agentService)
+		public HouseController(
+			IHouseService houseService,
+			IAgentService agentService,
+			IMemoryCache cache)
 		{
 			this.houseService = houseService;
 			this.agentService = agentService;
+			this.cache = cache;
 		}
 
 		[AllowAnonymous]
@@ -331,6 +338,7 @@ namespace HouseRenting.Web.Controllers
 				TempData[ErrorMessage] = "Something went wrong! Please try again or contact support.";
 			}
 
+			cache.Remove(RentsCacheKey);
 
 			return RedirectToAction(nameof(All));
 		}
@@ -359,7 +367,7 @@ namespace HouseRenting.Web.Controllers
 				TempData[ErrorMessage] = "Something went wrong! Please try again or contact support.";
 			}
 
-
+			cache.Remove(RentsCacheKey);
 
 			return RedirectToAction(nameof(Mine));
 		}
