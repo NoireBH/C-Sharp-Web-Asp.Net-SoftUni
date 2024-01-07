@@ -10,9 +10,11 @@ namespace HouseRenting.Services.Tests
 {
 	public static class DatabaseSeeder
 	{
-		private static ApplicationUser AgentUser;
-		private static ApplicationUser RenterUser;
-		private static Agent Agent;
+		public static ApplicationUser AgentUser;
+		public static ApplicationUser RenterUser;
+		public static Agent Agent;
+		public static House House;
+		public static House RentedHouse;
 
 		public static void SeedDatabase(HouseRentingDbContext dbContext)
 		{
@@ -48,9 +50,39 @@ namespace HouseRenting.Services.Tests
 				PhoneNumber = "0874319991"
 			};
 
-			dbContext.Add(AgentUser);
-			dbContext.Add(RenterUser);
-			dbContext.Add(Agent);
+			House = new House()
+			{
+				Title = "Not Rented House",
+				Address = "In your heart",
+				Description = "A test non-rented house",
+				ImageUrl = "https://www.jamesedition.com/stories/wp-content/uploads/2022/05/4-6.jpg",
+				PricePerMonth = 1000,
+				CreatedOn = DateTime.Now,
+				IsActive = true,
+				Category = new Category { Name = "Cottage"},
+				Agent = Agent,
+
+			};
+
+			RentedHouse = new House()
+			{
+				Title = "Rented House",
+				Address = "Closer than you think",
+				Description = "A test rented house",
+				ImageUrl = "https://i.pinimg.com/originals/a6/f5/85/a6f5850a77633c56e4e4ac4f867e3c00.jpg",
+				PricePerMonth = 500,
+				CreatedOn = DateTime.Now,
+				IsActive = true,
+				Category = new Category { Name = "Duplex" },
+				Agent = Agent,
+				Renter = RenterUser
+			};
+
+			dbContext.Users.Add(AgentUser);
+			dbContext.Users.Add(RenterUser);
+			dbContext.Agents.Add(Agent);
+			dbContext.Houses.Add(House);
+			dbContext.Houses.Add(RentedHouse);
 
 			dbContext.SaveChanges();
 		}
