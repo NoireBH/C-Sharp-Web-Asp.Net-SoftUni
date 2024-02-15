@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SoftUniBazar.Data.Models;
 
 namespace SoftUniBazar.Data
 {
@@ -10,8 +11,16 @@ namespace SoftUniBazar.Data
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        { 
+        public DbSet<Ad> Ads { get; set; } = null!;
+
+        public DbSet<AdBuyer> AdBuyers { get; set; } = null!;
+
+		public DbSet<Category> Categories { get; set; } = null!;
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AdBuyer>().HasKey(x => new { x.BuyerId, x.AdId });
+
             //modelBuilder
             //    .Entity<Category>()
             //    .HasData(new Category()
