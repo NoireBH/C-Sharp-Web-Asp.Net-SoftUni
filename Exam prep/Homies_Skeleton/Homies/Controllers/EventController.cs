@@ -188,6 +188,83 @@ namespace Homies.Controllers
 			return RedirectToAction(nameof(All));
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> Join(int id)
+		{
+			var eventToJoin = await context
+				.Events
+				.Where(e => e.Id == id)
+				.Include(e => e.EventsParticipants)
+				.FirstOrDefaultAsync();
+
+			if (eventToJoin == null)
+			{
+				return BadRequest();
+			}
+
+			string userId = GetCurrentUserId();
+
+			if (!eventToJoin.EventsParticipants.Any(p => p.HelperId == userId))
+			{
+				eventToJoin.EventsParticipants.Add(new EventParticipant()
+				{
+					EventId = eventToJoin.Id,
+					HelperId = userId
+				});
+
+				await context.SaveChangesAsync();
+			}
+
+			return RedirectToAction(nameof(Joined));
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> Joined()
+		{
+			string userId = GetCurrentUserId();
+
+			var model = await context.EventsParticipants
+				.Where(ep => ep.HelperId == userId)
+				.AsNoTracking()
+				.Select(ep => new EventInfoViewModel
+				{
+					Id = ep.EventId,
+					Name = ep.Event.Name,
+					Start = ep.Event.Start.ToString(ValidationConstants.DateTimeFormat),
+					Type = ep.Event.Type.Name,
+					Organiser = ep.Event.Organizer.UserName
+				}).ToArrayAsync();
+
+			return View(model);
+		}
+
+		public async Task<IActionResult> Leave(int id)
+		{
+			var e = await context.Events
+				.Where(e => e.Id == id)
+				.Include(e => e.EventsParticipants)
+				.FirstOrDefaultAsync();
+
+			if (e == null)
+			{
+				return BadRequest();
+			}
+
+			string userId = GetCurrentUserId();
+
+			var ep = e.EventsParticipants.FirstOrDefault(ep => ep.HelperId == userId);
+
+			if (ep == null)
+			{
+				return BadRequest();
+			}
+
+			e.EventsParticipants.Remove(ep);
+			await context.SaveChangesAsync();
+
+			return RedirectToAction(nameof(All));
+		}
+
 
 		private async Task<IEnumerable<TypeViewModel>> GetEventTypes()
 		{
