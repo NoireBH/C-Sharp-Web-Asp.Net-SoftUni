@@ -1,4 +1,5 @@
 ﻿using Homies.Data;
+using Homies.Models;
 using Homies.Models.Event;
 using Homies.Models.Type;
 using Microsoft.AspNetCore.Mvc;
@@ -263,6 +264,32 @@ namespace Homies.Controllers
 			await context.SaveChangesAsync();
 
 			return RedirectToAction(nameof(All));
+		}
+
+		public async Task<IActionResult> Details(int id)
+		{
+			var model = await context.Events
+				.Where(e => e.Id == id)
+				.AsNoTracking()
+				.Select(e => new EventDetailsViewModel()
+				{
+					Id = e.Id,
+					CreatedOn = e.CreatedOn.ToString(ValidationConstants.DateTimeFormat),
+					Description = e.Description,
+					End = e.End.ToString(ValidationConstants.DateTimeFormat),
+					Name = e.Name,
+					Organiser = e.Organizer.UserName,
+					Start = e.Start.ToString(ValidationConstants.DateTimeFormat),
+					Type = e.Type.Name
+				})
+				.FirstOrDefaultAsync();
+
+			if (model == null)
+			{
+				return BadRequest();
+			}
+
+			return View(model);
 		}
 
 
